@@ -106,6 +106,7 @@ function parse_ws_xml_cols(columns, cols) {
 			coll.MDW = MDW;
 		}
 		while(colm <= colM) columns[colm++] = coll;
+		p.Style = cell.s;
 	}
 }
 
@@ -186,6 +187,7 @@ return function parse_ws_xml_data(sdata, s, opts, guess) {
 		if(opts.sheetRows && opts.sheetRows < tagr) continue;
 		if(guess.s.r > tagr - 1) guess.s.r = tagr - 1;
 		if(guess.e.r < tagr - 1) guess.e.r = tagr - 1;
+		o.s = cell.RawStyle !== undefined ? cell.RawStyle : get_cell_style(opts.cellXfs, cell, opts);
 
 		/* 18.3.1.4 c CT_Cell */
 		cells = x.substr(ri).split(cellregex);

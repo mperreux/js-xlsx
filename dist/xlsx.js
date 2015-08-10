@@ -7368,6 +7368,7 @@ function parse_ws_xml_cols(columns, cols) {
 			coll.MDW = MDW;
 		}
 		while(colm <= colM) columns[colm++] = coll;
+		p.Style = cell.s;
 	}
 }
 
@@ -7448,6 +7449,7 @@ return function parse_ws_xml_data(sdata, s, opts, guess) {
 		if(opts.sheetRows && opts.sheetRows < tagr) continue;
 		if(guess.s.r > tagr - 1) guess.s.r = tagr - 1;
 		if(guess.e.r < tagr - 1) guess.e.r = tagr - 1;
+		o.s = cell.RawStyle !== undefined ? cell.RawStyle : get_cell_style(opts.cellXfs, cell, opts);
 
 		/* 18.3.1.4 c CT_Cell */
 		cells = x.substr(ri).split(cellregex);
@@ -11260,6 +11262,9 @@ function parse_zip(zip, opts) {
 		out.keys = entries;
 		out.files = zip.files;
 	}
+	if(dir.style) {
+		out.RawStyle = getzipdata(zip, dir.style.replace(/^\//,''));
+	}
 	if(opts.bookVBA) {
 		if(dir.vba.length > 0) out.vbaraw = getzipdata(zip,dir.vba[0],true);
 		else if(dir.defaults.bin === 'application/vnd.ms-office.vbaProject') out.vbaraw = getzipdata(zip,'xl/vbaProject.bin',true);
@@ -11347,7 +11352,8 @@ function write_zip(wb, opts) {
 	/* TODO: something more intelligent with styles */
 
 	f = "xl/styles." + wbext;
-	zip.file(f, write_sty(wb, f, opts));
+	// zip.file(f, write_sty(wb, f, opts));
+	zip.file(f, wb.RawStyle !== undefined ? wb.RawStyle : write_sty(wb, f, opts));
 	ct.styles.push(f);
 	add_rels(opts.wbrels, ++rId, "styles." + wbext, RELS.STY);
 
