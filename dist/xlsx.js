@@ -7368,7 +7368,6 @@ function parse_ws_xml_cols(columns, cols) {
 			coll.MDW = MDW;
 		}
 		while(colm <= colM) columns[colm++] = coll;
-		p.Style = cell.s;
 	}
 }
 
@@ -7492,6 +7491,7 @@ return function parse_ws_xml_data(sdata, s, opts, guess) {
 					p.v = sstr.t;
 					p.r = sstr.r;
 					if(opts.cellHTML) p.h = sstr.h;
+					p.Style = tag.s;
 					break;
 				case 'str':
 					p.t = "s";
